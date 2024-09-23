@@ -14,20 +14,20 @@ pipeline {
 
    }
     stages {
-        stage('Compile') { //prod
+        stage('Compile') { //slave1 --- /tmp/workspace
         agent {label 'linux_slave'}
             steps {
                 echo "Compile the code in ${params.Env}"
                 sh "mvn compile"
             }
         }
-         stage('UnitTest') { //test
+         stage('UnitTest') { //slave1 -- /tmp/workpscae
          when{
             expression{
                 params.executeTests == true 
             }
          }
-         agent any
+          agent {label 'linux_slave'}
             steps {
                 echo "Test the code"
                 sh "mvn test"
@@ -38,7 +38,7 @@ pipeline {
                 }
             }
         }
-         stage('Package') {//dev
+         stage('Package') {//slave2 -- /var/lib/jenkins/workspace
         //agent {label 'linux_slave'}
         when{
             expression{
