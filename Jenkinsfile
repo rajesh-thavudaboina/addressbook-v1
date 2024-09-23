@@ -5,7 +5,7 @@ pipeline {
         maven "mymaven"
    }
    environment{
-    DEV_SERVER_IP='ece2-user@172.31.1.95'
+    DEV_SERVER_IP='ec2-user@172.31.1.95'
    }
    parameters{
         string(name:'Env',defaultValue:'Test',description:'Environment to deploy')
