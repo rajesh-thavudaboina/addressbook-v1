@@ -20,6 +20,7 @@ pipeline {
     stages {
         stage('Compile') { //slave1 --- /tmp/workspace
         // agent {label 'linux_slave'}
+        agent any
             steps {
                 echo "Compile the code in ${params.Env}"
                 sh "mvn compile"
