@@ -97,7 +97,7 @@ pipeline {
                     sh "scp -o StrictHostKeyChecking=no server-script.sh ${DEPLOY_SERVER_IP}:/home/ec2-user"
                     sh "ssh ${DEPLOY_SERVER_IP} sudo yum install docker -y"
                     sh "ssh ${DEPLOY_SERVER_IP} sudo systemctl start docker"
-                    sh "ssh ${DEV_SERVER_IP} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
+                    sh "ssh ${DEPLOY_SERVER_IP} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
                     sh "ssh ${DEPLOY_SERVER_IP} sudo docker run -itd ${IMAGE_NAME}:${BUILD_NUMBER}"
 
                    }
