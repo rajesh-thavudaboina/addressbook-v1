@@ -9,6 +9,8 @@ pipeline {
     DEV_SERVER_IP='ec2-user@172.31.9.12'
     DEPLOY_SERVER_IP='ec2-user@172.31.11.81'
     IMAGE_NAME='devopstrainer/java-mvn-privaterepos'
+    ACCESS_KEY=credentials('ACCESS_KEY')
+        SECRET_ACCESS_KEY=credentials('SECRET_ACCESS_KEY')
    }
 
    parameters{
@@ -73,36 +75,51 @@ pipeline {
                }
             }
         }
-          stage('Deploy') {//slave2 -- /var/lib/jenkins/workspace
-        //agent {label 'linux_slave'}
+        //   stage('Deploy') {//slave2 -- /var/lib/jenkins/workspace
+        // //agent {label 'linux_slave'}
        
-        when{
-            expression{
-                BRANCH_NAME == 'docker-1'
+        // when{
+        //     expression{
+        //         BRANCH_NAME == 'docker-1'
+        //     }
+        // }
+        // agent any
+        //    input{
+        //     message "Select the version to deploy"
+        //     ok "version selected"
+        //     parameters{
+        //         choice(name:'NEWAPP',choices:['1.2','2.1','3.1'])
+        //     }
+        //    }
+        //     steps {
+        //           script{
+        //           sshagent(['slave2']) {
+        //             withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+        //             echo "Package the code ${params.APPVERSION}"
+        //             sh "ssh ${DEPLOY_SERVER_IP} sudo yum install docker -y"
+        //             sh "ssh ${DEPLOY_SERVER_IP} sudo systemctl start docker"
+        //             sh "ssh ${DEPLOY_SERVER_IP} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
+        //             sh "ssh ${DEPLOY_SERVER_IP} sudo docker run -itd -p 9991:8080 ${IMAGE_NAME}:${BUILD_NUMBER}"
+
+        //            }
+        //       }
+        //        }
+        // }}
+        stage("Deploy on EKS"){
+            agent any
+            steps{
+                script{
+                    echo "Deploy on EKS cluster"
+                    sh 'aws --version'
+                    sh 'aws configure set aws_access_key_id ${ACCESS_KEY}'
+                    sh 'aws configure set aws_secret_access_key ${SECRET_ACCESS_KEY}'
+                    sh 'aws eks update-kubeconfig --region ap-south-1 --name myeks2'
+                    sh 'kubectl get nodes'
+                    sh 'envsubst < k8s-manifests/java-mvn-app.yaml | kubectl apply -f -'
+                    sh 'kubectl get all'
+                }
             }
         }
-        agent any
-           input{
-            message "Select the version to deploy"
-            ok "version selected"
-            parameters{
-                choice(name:'NEWAPP',choices:['1.2','2.1','3.1'])
-            }
-           }
-            steps {
-                  script{
-                  sshagent(['slave2']) {
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                    echo "Package the code ${params.APPVERSION}"
-                    sh "ssh ${DEPLOY_SERVER_IP} sudo yum install docker -y"
-                    sh "ssh ${DEPLOY_SERVER_IP} sudo systemctl start docker"
-                    sh "ssh ${DEPLOY_SERVER_IP} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
-                    sh "ssh ${DEPLOY_SERVER_IP} sudo docker run -itd -p 9991:8080 ${IMAGE_NAME}:${BUILD_NUMBER}"
-
-                   }
-              }
-               }
-        }}
                   
 
                    }
