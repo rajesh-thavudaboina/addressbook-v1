@@ -10,7 +10,7 @@ pipeline {
     DEPLOY_SERVER_IP='ec2-user@172.31.11.81'
     IMAGE_NAME='devopstrainer/java-mvn-privaterepos'
     ACCESS_KEY=credentials('ACCESS_KEY')
-        SECRET_ACCESS_KEY=credentials('SECRET_ACCESS_KEY')
+    SECRET_ACCESS_KEY=credentials('SECRET_ACCESS_KEY')
    }
 
    parameters{
