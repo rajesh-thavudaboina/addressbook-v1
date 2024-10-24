@@ -122,6 +122,7 @@ pipeline {
                     sh "git config user.email ${GIT_EMAIL}"
                     sh "git config user.name ${GIT_USERNAME}"
                     sh 'envsubst < java-mvn-app-var.yml > k8s-manifests/java-mvn-app.yml'
+                    sh 'git add k8s-manifests/java-mvn-app.yml'
                     sh "git commit -m 'Triggered Build:${env.BUILD_NUMBER}'"
                     sh "git push https://${GIT_USER}:${GIT_TOKEN}@github.com/preethid/addressbook-v1.git HEAD:argocd-1"
                       }
