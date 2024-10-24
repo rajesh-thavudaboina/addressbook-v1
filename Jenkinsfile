@@ -9,8 +9,11 @@ pipeline {
     DEV_SERVER_IP='ec2-user@172.31.0.118'
     //DEPLOY_SERVER_IP='ec2-user@172.31.11.81'
     IMAGE_NAME='devopstrainer/java-mvn-privaterepos'
-    ACCESS_KEY=credentials('ACCESS_KEY')
-    SECRET_ACCESS_KEY=credentials('SECRET_ACCESS_KEY')
+    // ACCESS_KEY=credentials('ACCESS_KEY')
+    // SECRET_ACCESS_KEY=credentials('SECRET_ACCESS_KEY')
+     GIT_CREDENTIALS_ID = 'GITHUB1' // The username-password type ID of the Jenkins credentials
+    GIT_USERNAME = 'preethid'
+    GIT_EMAIL = 'preethi@example.com'
    }
 
    parameters{
@@ -110,13 +113,18 @@ pipeline {
             steps{
                 script{
                     echo "Deploy on EKS cluster"
-                    sh 'aws --version'
-                    sh 'aws configure set aws_access_key_id ${ACCESS_KEY}'
-                    sh 'aws configure set aws_secret_access_key ${SECRET_ACCESS_KEY}'
-                    sh 'aws eks update-kubeconfig --region ap-south-1 --name myeks2'
-                    sh 'kubectl get nodes'
-                    sh 'envsubst < k8s-manifests/java-mvn-app.yml | kubectl apply -f -'
-                    sh 'kubectl get all'
+                    // sh 'aws --version'
+                    // sh 'aws configure set aws_access_key_id ${ACCESS_KEY}'
+                    // sh 'aws configure set aws_secret_access_key ${SECRET_ACCESS_KEY}'
+                    // sh 'aws eks update-kubeconfig --region ap-south-1 --name myeks2'
+                    // sh 'kubectl get nodes'
+                    withCredentials([usernamePassword(credentialsId: "${GIT_CREDENTIALS_ID}", passwordVariable: 'GIT_TOKEN', usernameVariable: 'GIT_USER')]) {
+                    sh "git config user.email ${GIT_EMAIL}"
+                    sh "git config user.name ${GIT_USERNAME}"
+                    sh 'envsubst < java-mvn-app-var.yml > k8s-manifests/java-mvn-app.yml'
+                    sh "git commit -m 'Triggered Build:${env.BUILD_NUMBER}'"
+                    sh "git push https://${GIT_USER}:${GIT_TOKEN}@github.com/preethid/addressbook-v1.git HEAD:argocd-1"
+                      }
                 }
             }
         }
