@@ -108,7 +108,7 @@ pipeline {
         //       }
         //        }
         // }}
-        stage("Deploy on EKS"){
+        stage("Deploy on EKS with argocd"){
             agent any
             steps{
                 script{
