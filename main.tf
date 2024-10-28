@@ -5,6 +5,13 @@ terraform {
       version = "5.73.0"
     }
   }
+  backend "s3" {
+        bucket="tf-state-bucket-v1"
+        key="terraform.tfstate"
+        region="ap-south-1"
+        dynamodb_table="aws-table"
+    }
+
 }
 
 provider "aws" {
@@ -51,11 +58,11 @@ output "ip" {
 }
 
 output "nwinterface" {
-  value = aws_instance.web[0].primary_network_interface_id
+  value = aws_instance.web[1].primary_network_interface_id
   
 }
 
 output "ami" {
-  value = aws_instance.web[0].ami
+  value = aws_instance.web[1].ami
   
 }
