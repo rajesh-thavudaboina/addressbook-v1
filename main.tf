@@ -25,6 +25,7 @@ variable "instance_type"{
 
 }
 
+
 data "aws_ami" "myami"{
   most_recent = true
 #  virtualization_type = "hvm"
@@ -44,25 +45,25 @@ data "aws_ami" "myami"{
 }
 
 resource "aws_instance" "web" {
-  count         = 2
   ami           = data.aws_ami.myami.id
   instance_type = var.instance_type
 
   tags = {
-    Name = "tf-${count.index}"
+   // Name = "tf-${count.index}"
+     Name = "tf-${terraform.workspace}"
   }
 }
 
 output "ip" {
-  value = aws_instance.web[0].public_ip
+  value = aws_instance.web.public_ip
 }
 
 output "nwinterface" {
-  value = aws_instance.web[1].primary_network_interface_id
+  value = aws_instance.web.primary_network_interface_id
   
 }
 
 output "ami" {
-  value = aws_instance.web[1].ami
+  value = aws_instance.web.ami
   
 }
