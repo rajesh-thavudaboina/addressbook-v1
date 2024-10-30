@@ -93,7 +93,7 @@ pipeline {
        
         when{
             expression{
-                BRANCH_NAME == 'docker-1'
+                BRANCH_NAME == 'tf-cicd'
             }
         }
         agent any

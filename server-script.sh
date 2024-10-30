@@ -9,10 +9,10 @@ if [ -d "addressbook-v1" ]
 then
   echo "repo is cloned and exists"
   cd /home/ec2-user/addressbook-v1
-  git pull origin docker-1
+  git pull origin tf-cicd
 else
   git clone https://github.com/preethid/addressbook-v1.git
 fi
 cd /home/ec2-user/addressbook-v1
-git checkout docker-1
+git checkout tf-cicd
 sudo docker build -t $1:$2 /home/ec2-user/addressbook-v1
