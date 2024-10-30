@@ -13,6 +13,15 @@ pipeline {
             steps {
                 echo 'Compiling the code'
                 echo "compiling in env: ${params.Env}"
+                sh "mvn compile"
+
+            }
+        }
+         stage('CodeReview') {
+            steps {
+                echo 'Reviewing the code'
+                echo "Deploying the app version ${params.APPVERSION}"
+                sh "mvn pmd:pmd"
             }
         }
          stage('UniTest') {
@@ -23,12 +32,15 @@ pipeline {
             }
             steps {
                 echo 'UnitTest the code'
+                sh "mvn test"
             }
         }
+
          stage('Package') {
             steps {
                 echo 'Package the code'
                 echo "Deploying the app version ${params.APPVERSION}"
+                sh "mvn package"
             }
         }
           stage('Deploy') {
