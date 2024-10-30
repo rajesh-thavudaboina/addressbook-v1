@@ -109,7 +109,7 @@ pipeline {
                   sshagent(['slave2']) {
                     echo "waiting for ec2 instance to intialise"
                     sleep(time:90,unit: "SECONDS")
-                    echo ${EC2_PUBLIC_IP}
+                    echo "${EC2_PUBLIC_IP}"
                     withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                     echo "Package the code ${params.APPVERSION}"
                     sh "ssh -o StrictHostKeyChecking=no ec2-user@${EC2_PUBLIC_IP} sudo yum install docker -y"
