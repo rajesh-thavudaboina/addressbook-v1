@@ -31,5 +31,19 @@ pipeline {
                 echo "Deploying the app version ${params.APPVERSION}"
             }
         }
+          stage('Deploy') {
+            input{
+                message "Select the platform to deploy"
+                ok "Platform selected"
+                parameters{
+                    choice(name:'Platform',choices['On-prem','EKS','EC2'])
+                }
+            }
+            steps {
+                echo 'Deploy the code'
+                echo "Deploying the app version ${params.APPVERSION}"
+                echo "Deploying on ${params.platform}"
+            }
+        }
     }
 }
