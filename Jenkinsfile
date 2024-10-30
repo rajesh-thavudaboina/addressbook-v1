@@ -36,7 +36,7 @@ pipeline {
                 message "Select the platform to deploy"
                 ok "Platform selected"
                 parameters{
-                    choice(name:'Platform',choices['On-prem','EKS','EC2'])
+                    choice(name:'Platform',choices:['On-prem','EKS','EC2'])
                 }
             }
             steps {
