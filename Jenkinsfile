@@ -19,7 +19,7 @@ pipeline {
             }
         }
          stage('CodeReview') {
-            ageny any
+            agent any
             steps {
                 echo 'Reviewing the code'
                 echo "Deploying the app version ${params.APPVERSION}"
