@@ -12,7 +12,7 @@ pipeline {
         stage('Compile') {
             steps {
                 echo 'Compiling the code'
-                echo "compiling in env: ${params.ENV}"
+                echo "compiling in env: ${params.Env}"
             }
         }
          stage('UniTest') {
