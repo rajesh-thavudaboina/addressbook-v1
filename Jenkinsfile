@@ -42,7 +42,7 @@ pipeline {
             steps {
                 echo 'Deploy the code'
                 echo "Deploying the app version ${params.APPVERSION}"
-                echo "Deploying on ${params.platform}"
+                echo "Deploying on ${params.Platform}"
             }
         }
     }
