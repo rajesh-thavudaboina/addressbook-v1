@@ -23,11 +23,11 @@ pipeline {
                 echo "Deploying the app version ${params.APPVERSION}"
                 sh "mvn pmd:pmd"
             }
-            post{
-                always{
-                    pmd pattern: 'target/pmd.xml'
-                }
-            }
+            // post{
+            //     always{
+            //         pmd pattern: 'target/pmd.xml'
+            //     }
+            // }
         }
          stage('UniTest') {
             when{
