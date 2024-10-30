@@ -23,25 +23,25 @@ provider "aws" {
 
 
 // vpc
-resource "aws_vpc" "ownvpc" {
-  cidr_block = var.vpc_cidr_block
-  tags={
-    Name="${var.env}-vpc"
-  }
-}
+# resource "aws_vpc" "ownvpc" {
+#   cidr_block = var.vpc_cidr_block
+#   tags={
+#     Name="${var.env}-vpc"
+#   }
+# }
 
-module "mysubnet"{
-  source = "./modules/subnet"
-  vpc_id = aws_vpc.ownvpc.id
-  subnet_cidr_block = var.subnet_cidr_block
-  az=var.az 
-  env =var.env
-}
+# module "mysubnet"{
+#   source = "./modules/subnet"
+#   vpc_id = aws_vpc.ownvpc.id
+#   subnet_cidr_block = var.subnet_cidr_block
+#   az=var.az 
+#   env =var.env
+# }
 
 module "webserver"{
   source = "./modules/webserver"
-  vpc_id = aws_vpc.ownvpc.id
-  subnet_id = module.mysubnet.subnet.id
+  # vpc_id = aws_vpc.ownvpc.id
+  # subnet_id = module.mysubnet.subnet.id
   env = var.env
   instance_type = var.instance_type
 }

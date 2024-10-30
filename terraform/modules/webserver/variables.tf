@@ -1,8 +1,8 @@
 variable env{}
-variable "vpc_id" {
+# variable "vpc_id" {
   
-}
+# }
 variable "instance_type" {
   
 }
-variable subnet_id{}
+# variable subnet_id{}

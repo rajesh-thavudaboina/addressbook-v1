@@ -17,7 +17,7 @@ data "aws_ami" "myami"{
 resource "aws_security_group" "mywebsecurity" {
   name        = "ownsecurityrules"
   description = "Allow TLS inbound traffic"
-  vpc_id      = var.vpc_id
+  //vpc_id      = var.vpc_id
  
    ingress {
     description      = "SSH"
@@ -55,7 +55,7 @@ resource "aws_instance" "webserver" {
   instance_type = var.instance_type
    
    associate_public_ip_address =true
-   subnet_id=var.subnet_id
+   //subnet_id=var.subnet_id
    vpc_security_group_ids = [aws_security_group.mywebsecurity.id]
    key_name="aws"
    //user_data=file("server-script.sh")
