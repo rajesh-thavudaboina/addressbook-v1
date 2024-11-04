@@ -63,7 +63,7 @@ pipeline {
             }
         }
 
-         stage('Package') {//slave2
+         stage('Package and push to jfrog') {//slave2
             //agent {label 'linux_slave'}
             agent any
             steps {
@@ -73,6 +73,7 @@ pipeline {
                 echo "Deploying the app version ${params.APPVERSION}"
                 sh "scp -o StrictHostKeyChecking=no server-script.sh ${DEV_SERVER}:/home/ec2-user"
                 sh "ssh -o StrictHostKeyChecking=no ${DEV_SERVER} 'bash /home/ec2-user/server-script.sh'"
+
             }
         }
             }
