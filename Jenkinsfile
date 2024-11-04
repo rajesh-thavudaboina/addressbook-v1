@@ -57,8 +57,8 @@ pipeline {
             agent any
             steps{
                 script{
-                    echo "Static Code Covergae Analysis with Jacoco"
-                    sh "mvn verfiy"
+                    echo "Static Code Coverage Analysis with Jacoco"
+                    sh "mvn verify"
                 }
             }
         }
