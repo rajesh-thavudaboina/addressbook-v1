@@ -14,3 +14,4 @@ fi
 cd addressbook-v1
 
 mvn package
+mvn -U deploy -s settings.xml

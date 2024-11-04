@@ -5,7 +5,7 @@
     <groupId>com.preethidevops.tutorial</groupId>
     <artifactId>addressbook</artifactId>
     <packaging>war</packaging>
-    <version>2.0</version>
+    <version>3.0</version>
     <name>Vaadin Addressbook example</name>
 
     <properties>
@@ -515,4 +515,11 @@
             </reporting>
         </profile>
     </profiles>
+    <distributionManagement>
+    <repository>
+        <id>central</id>
+        <name>a0h6x0sylzvum-artifactory-primary-0-releases</name>
+        <url>https://newaxisdevops.jfrog.io/artifactory/devops-demo-libs-release</url>
+    </repository>
+</distributionManagement>
 </project>
