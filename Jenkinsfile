@@ -35,7 +35,7 @@ pipeline {
             //     }
             // }
         }
-         stage('UniTest') {
+         stage('UniTest') {//slave1
            agent {label 'linux_slave'}
             when{
                 expression{
@@ -53,8 +53,17 @@ pipeline {
                 }
             }
         }
+        stage('CodeCoverage'){
+            agent any
+            steps{
+                script{
+                    echo "codereview with Jacoco"
+                    sh "mvn verfiy"
+                }
+            }
+        }
 
-         stage('Package') {
+         stage('Package') {//slave2
             //agent {label 'linux_slave'}
             agent any
             steps {
