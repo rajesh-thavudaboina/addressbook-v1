@@ -9,7 +9,9 @@ pipeline {
         choice(name:'APPVERSION',choices:['1.1','1.2','1.3'])
 
     }
-
+    environment{
+        DEV_SERVER='ec2-user@172.31.9.75'
+    }
     stages {
         stage('Compile') {
             agent any
@@ -34,12 +36,13 @@ pipeline {
             // }
         }
          stage('UniTest') {
-            agent any
+           agent {label 'linux_slave'}
             when{
                 expression{
                     params.executeTests == true
                 }
             }
+            
             steps {
                 echo 'UnitTest the code'
                 sh "mvn test"
@@ -52,13 +55,18 @@ pipeline {
         }
 
          stage('Package') {
-            agent {label 'linux_slave'}
+            //agent {label 'linux_slave'}
             steps {
+                script{
+                sshagent(['slave2']) {
                 echo 'Package the code'
                 echo "Deploying the app version ${params.APPVERSION}"
-                sh "mvn package"
+                sh "scp -o StrictHostKeyChecking=no server-script.sh ${DEV_SERVER}:/home/ec2-user"
+                sh "ssh -o StrictHostKeyChecking=no ${DEV_SERVER} 'bash /home/ec2-user/server-script.sh'"
             }
         }
+            }
+         }
           stage('Deploy') {
             agent any
             input{
