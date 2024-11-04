@@ -515,13 +515,4 @@
             </reporting>
         </profile>
     </profiles>
-<!-- <distributionManagement>
-    <repository>
-        <id>central</id>
-        <name>a0h6x0sylzvum-artifactory-primary-0-releases</name>
-        <url>https://newaxisdevops.jfrog.io/artifactory/demo-libs-release</url>
-    </repository>
-</distributionManagement> -->
-
-
 </project>
