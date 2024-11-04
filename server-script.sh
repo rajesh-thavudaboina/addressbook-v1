@@ -5,8 +5,8 @@ sudo yum install maven -y
 if [ -d "addressbook-v1" ]
 then
   echo "repo is cloned and exists"
-  cd addressbook-v1
-  git pull origin jfrog-b1
+    git pull origin jfrog-b1
+    cd addressbook-v1
 else
   git clone https://github.com/preethid/addressbook-v1.git
 fi
