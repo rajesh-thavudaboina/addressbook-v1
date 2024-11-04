@@ -6,7 +6,7 @@ if [ -d "addressbook-v1" ]
 then
   echo "repo is cloned and exists"
   cd addressbook-v1
-  git pull origin sshagent-b1
+  git pull origin jfrog-b1
 else
   git clone https://github.com/preethid/addressbook-v1.git
 fi
