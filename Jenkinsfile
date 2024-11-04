@@ -56,6 +56,7 @@ pipeline {
 
          stage('Package') {
             //agent {label 'linux_slave'}
+            agent any
             steps {
                 script{
                 sshagent(['slave2']) {
