@@ -116,7 +116,7 @@ pipeline {
                     echo "${EC2_PUBLIC_IP}"
                     //withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                     echo "Package the code ${params.APPVERSION}"
-                    sh "scp -o StrickHostKeyChecking=no ansible/* ${ACM_IP}:/home/ec2-user"
+                    sh "scp -o StrictHostKeyChecking=no ansible/* ${ACM_IP}:/home/ec2-user"
 
                     // sh "ssh -o StrictHostKeyChecking=no ec2-user@${EC2_PUBLIC_IP} sudo yum install docker -y"
                     // sh "ssh ec2-user@${EC2_PUBLIC_IP} sudo systemctl start docker"
