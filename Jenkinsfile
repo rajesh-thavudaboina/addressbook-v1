@@ -122,7 +122,7 @@ pipeline {
                     // sh "ssh ec2-user@${EC2_PUBLIC_IP} sudo systemctl start docker"
                     // sh "ssh ec2-user@${EC2_PUBLIC_IP} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
                     // sh "ssh ec2-user@${EC2_PUBLIC_IP} sudo docker run -itd -p 8080:8080 ${IMAGE_NAME}:${BUILD_NUMBER}"
-                    withCredentials([sshUserPrivateKey(credentialsId: 'ansible_target',keyFileVariable: 'keyfile',usernameVariable: 'user')]){ 
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ansible-target',keyFileVariable: 'keyfile',usernameVariable: 'user')]){ 
                     sh "scp -o StrictHostKeyChecking=no $keyfile ${ACM_IP}:/home/ec2-user/.ssh/id_rsa"    
                     }
                     sh "ssh -o StrictHostKeyChecking=no ${ACM_IP} bash /home/ec2-user/ansible-config.sh ${AWS_ACCESS_KEY_ID} ${AWS_SECRET_ACCESS_KEY} ${DOCKER_REG_PASSWORD} ${IMAGE_NAME}"
