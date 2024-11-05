@@ -97,7 +97,7 @@ pipeline {
        
         when{
             expression{
-                BRANCH_NAME == 'tf-cicd'
+                BRANCH_NAME == 'ansible-cicd'
             }
         }
         agent any
