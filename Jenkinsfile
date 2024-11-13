@@ -10,7 +10,8 @@ pipeline {
 
     }
     environment{
-        DEV_SERVER='ec2-user@172.31.9.75'
+        DEV_SERVER='ec2-user@172.31.10.218'
+        IMAGE_NAME='devopstrainer/java-mvn-privaterepos:$BUILD_NUMBER'
     }
     stages {
         stage('Compile') {
@@ -63,20 +64,39 @@ pipeline {
             }
         }
 
-         stage('Package and push to jfrog') {//slave2
+        //  stage('Package and push to jfrog') {//slave2
+        //     //agent {label 'linux_slave'}
+        //     agent any
+        //     steps {
+        //         script{
+        //         sshagent(['slave2']) {
+        //         echo 'Package the code'
+        //         echo "Deploying the app version ${params.APPVERSION}"
+        //         sh "scp -o StrictHostKeyChecking=no server-script.sh ${DEV_SERVER}:/home/ec2-user"
+        //         sh "ssh -o StrictHostKeyChecking=no ${DEV_SERVER} 'bash /home/ec2-user/server-script.sh'"
+                
+        //     }
+        // }
+        //     }
+        //  }
+         stage('Containerise the and push to jfrog') {//slave2
             //agent {label 'linux_slave'}
             agent any
             steps {
                 script{
                 sshagent(['slave2']) {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'password', usernameVariable: 'username')]) {
                 echo 'Package the code'
                 echo "Deploying the app version ${params.APPVERSION}"
                 sh "scp -o StrictHostKeyChecking=no server-script.sh ${DEV_SERVER}:/home/ec2-user"
-                sh "ssh -o StrictHostKeyChecking=no ${DEV_SERVER} 'bash /home/ec2-user/server-script.sh'"
-
+                sh "ssh -o StrictHostKeyChecking=no ${DEV_SERVER} bash /home/ec2-user/server-script.sh ${IMAGE_NAME}"
+                sh "ssh ${DEV_SERVER} sudo docker login -u ${username}  -p ${password}"
+                sh "ssh ${DEV_SERVER} sudo docker push ${IMAGE_NAME}"
+                
             }
         }
             }
+         }
          }
           stage('Deploy') {
             agent any
