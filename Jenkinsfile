@@ -12,6 +12,7 @@ pipeline {
     environment{
         DEV_SERVER='ec2-user@172.31.10.218'
         IMAGE_NAME='devopstrainer/java-mvn-privaterepos:$BUILD_NUMBER'
+        DEPLOY_SERVER='ec2-user@ip'
     }
     stages {
         stage('Compile') {
@@ -109,10 +110,20 @@ pipeline {
                 }
             }
             steps {
+                   script{
+                sshagent(['slave2']) {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'password', usernameVariable: 'username')]) {
                 echo 'Deploy the code'
                 echo "Deploying the app version ${params.APPVERSION}"
                 echo "Deploying on ${params.Platform}"
+                sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} sudo yum install docker -y"
+               sh "ssh ${DEPLOY_SERVER} sudo systemctl start docker"
+               sh "ssh ${DEPLOY_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
+               sh "ssh ${DEPLOY_SERVER} sudo docker run -itd -P ${IMAGE_NAME}"
             }
         }
+    }
+}
+          }
     }
 }
