@@ -37,7 +37,8 @@ pipeline {
             // }
         }
          stage('UniTest') {//slave1
-           agent {label 'linux_slave'}
+          // agent {label 'linux_slave'}
+             agent any
             when{
                 expression{
                     params.executeTests == true
