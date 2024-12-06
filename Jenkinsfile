@@ -82,7 +82,7 @@ pipeline {
         // }
         //     }
         //  }
-         stage('Containerise the and push to jfrog') {//slave2
+         stage('Containerise the and push to docker-hub') {//slave2
             //agent {label 'linux_slave'}
             agent any
             steps {
