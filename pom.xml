@@ -518,8 +518,8 @@
    <distributionManagement>
     <repository>
         <id>central</id>
-        <name>a0jr3vz1il7nb-artifactory-primary-0-releases</name>
-        <url>https://trialaeybn6.jfrog.io/artifactory/adbook-libs-release</url>
+        <name>xxx</name>
+        <url>https://xxx.jfrog.io/artifactory/adbook-libs-release</url>
     </repository>
 </distributionManagement>
 </project>
