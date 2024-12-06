@@ -3,13 +3,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <servers>
     <server>
-      <username>dnvsraj@gmail.com</username>
-      <password>cmVmdGtuOjAxOjE3NjIyMjU0ODM6YTUzMGNlNlNNTEhvbFhZc0x6bk52MEx6THVH</password>
+      <username>preethikunderu@gmail.com</username>
+      <password>cmVmdGtuOjAxOjE3NjQ5ODE2Mzc6Y0hBSHBtN1JUc3JwYnFEMXI1WjdidXpidHFQ</password>
       <id>central</id>
     </server>
     <server>
-      <username>dnvsraj@gmail.com</username>
-      <password>cmVmdGtuOjAxOjE3NjIyMjU0ODM6YTUzMGNlNlNNTEhvbFhZc0x6bk52MEx6THVH</password>
+      <username>preethikunderu@gmail.com</username>
+      <password>cmVmdGtuOjAxOjE3NjQ5ODE2Mzc6Y0hBSHBtN1JUc3JwYnFEMXI1WjdidXpidHFQ</password>
       <id>snapshots</id>
     </server>
   </servers>
@@ -21,14 +21,14 @@
             <enabled>false</enabled>
           </snapshots>
           <id>central</id>
-          <name>demo-libs-release</name>
-          <url>https://newaxisdevops.jfrog.io/artifactory/demo-libs-release</url>
+          <name>adbook-libs-release</name>
+          <url>https://trialaeybn6.jfrog.io/artifactory/adbook-libs-release</url>
         </repository>
         <repository>
           <snapshots />
           <id>snapshots</id>
-          <name>demo-libs-snapshot</name>
-          <url>https://newaxisdevops.jfrog.io/artifactory/demo-libs-snapshot</url>
+          <name>adbook-libs-snapshot</name>
+          <url>https://trialaeybn6.jfrog.io/artifactory/adbook-libs-snapshot</url>
         </repository>
       </repositories>
       <pluginRepositories>
@@ -37,14 +37,14 @@
             <enabled>false</enabled>
           </snapshots>
           <id>central</id>
-          <name>demo-libs-release</name>
-          <url>https://newaxisdevops.jfrog.io/artifactory/demo-libs-release</url>
+          <name>adbook-libs-release</name>
+          <url>https://trialaeybn6.jfrog.io/artifactory/adbook-libs-release</url>
         </pluginRepository>
         <pluginRepository>
           <snapshots />
           <id>snapshots</id>
-          <name>demo-libs-snapshot</name>
-          <url>https://newaxisdevops.jfrog.io/artifactory/demo-libs-snapshot</url>
+          <name>adbook-libs-snapshot</name>
+          <url>https://trialaeybn6.jfrog.io/artifactory/adbook-libs-snapshot</url>
         </pluginRepository>
       </pluginRepositories>
       <id>artifactory</id>

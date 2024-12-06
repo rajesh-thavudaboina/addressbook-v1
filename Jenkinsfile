@@ -10,10 +10,10 @@ pipeline {
 
     }
     environment{
-        DEV_SERVER='ec2-user@172.31.10.218'
-       // IMAGE_NAME='devopstrainer/java-mvn-privaterepos:$BUILD_NUMBER'
-        IMAGE_NAME='newaxisdevops.jfrog.io/addbook-docker/addbook:$BUILD_NUMBER'
-        DEPLOY_SERVER='ec2-user@172.31.2.21'
+        DEV_SERVER='ec2-user@172.31.8.175'
+       IMAGE_NAME='devopstrainer/java-mvn-privaterepos:$BUILD_NUMBER'
+        //IMAGE_NAME='newaxisdevops.jfrog.io/addbook-docker/addbook:$BUILD_NUMBER'
+        DEPLOY_SERVER='ec2-user@172.31.7.50'
     }
     stages {
         stage('Compile') {
@@ -88,14 +88,14 @@ pipeline {
             steps {
                 script{
                 sshagent(['slave2']) {
-               // withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'password', usernameVariable: 'username')]) {
-                  withCredentials([usernamePassword(credentialsId: 'jfrog-cred', passwordVariable: 'password', usernameVariable: 'username')]) {
+               withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'password', usernameVariable: 'username')]) {
+                  //withCredentials([usernamePassword(credentialsId: 'jfrog-cred', passwordVariable: 'password', usernameVariable: 'username')]) {
                 echo 'Package the code'
                 echo "Deploying the app version ${params.APPVERSION}"
                 sh "scp -o StrictHostKeyChecking=no server-script.sh ${DEV_SERVER}:/home/ec2-user"
                 sh "ssh -o StrictHostKeyChecking=no ${DEV_SERVER} bash /home/ec2-user/server-script.sh ${IMAGE_NAME}"
-                //sh "ssh ${DEV_SERVER} sudo docker login -u ${username}  -p ${password}"
-                      sh "ssh ${DEV_SERVER} sudo docker login -u ${username}  -p ${password} newasxisdevops.jfrog.io"
+                sh "ssh ${DEV_SERVER} sudo docker login -u ${username}  -p ${password}"
+                    //   sh "ssh ${DEV_SERVER} sudo docker login -u ${username}  -p ${password} newasxisdevops.jfrog.io"
                 sh "ssh ${DEV_SERVER} sudo docker push ${IMAGE_NAME}"
                 
             }
@@ -122,7 +122,7 @@ pipeline {
                 echo "Deploying on ${params.Platform}"
                 sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} sudo yum install docker -y"
                sh "ssh ${DEPLOY_SERVER} sudo systemctl start docker"
-               sh "ssh ${DEPLOY_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD} newaxisdevops.jfrog.io"
+               sh "ssh ${DEPLOY_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
                sh "ssh ${DEPLOY_SERVER} sudo docker run -itd -P ${IMAGE_NAME}"
             }
         }
