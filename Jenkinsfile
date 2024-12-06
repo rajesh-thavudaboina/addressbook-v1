@@ -91,11 +91,11 @@ pipeline {
           stage('Deploy') {//slave2 -- /var/lib/jenkins/workspace
         //agent {label 'linux_slave'}
        
-        when{
-            expression{
-                BRANCH_NAME == 'tf-cicd'
-            }
-        }
+        // when{
+        //     expression{
+        //         BRANCH_NAME == 'tf-cicd'
+        //     }
+        // }
         agent any
            input{
             message "Select the version to deploy"
