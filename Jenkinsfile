@@ -3,12 +3,12 @@ pipeline {
     tools {
         maven 'mymaven' 
     }
-    parameters{
-        string(name:'Env',defaultValue:'Test',description:'version to deploy')
-        booleanParam(name:'executeTests',defaultValue: true,description:'decide to run tc')
-        choice(name:'APPVERSION',choices:['1.1','1.2','1.3'])
+    // parameters{
+    //     string(name:'Env',defaultValue:'Test',description:'version to deploy')
+    //     booleanParam(name:'executeTests',defaultValue: true,description:'decide to run tc')
+    //     choice(name:'APPVERSION',choices:['1.1','1.2','1.3'])
 
-    }
+    // }
     environment{
         DEV_SERVER='ec2-user@172.31.8.175'
        IMAGE_NAME='devopstrainer/java-mvn-privaterepos:$BUILD_NUMBER'
@@ -90,12 +90,12 @@ pipeline {
                 sshagent(['slave2']) {
                withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'password', usernameVariable: 'username')]) {
                   //withCredentials([usernamePassword(credentialsId: 'jfrog-cred', passwordVariable: 'password', usernameVariable: 'username')]) {
-                echo 'Package the code'
-                echo "Deploying the app version ${params.APPVERSION}"
+                // echo 'Package the code'
+                // echo "Deploying the app version ${params.APPVERSION}"
                 sh "scp -o StrictHostKeyChecking=no server-script.sh ${DEV_SERVER}:/home/ec2-user"
                 sh "ssh -o StrictHostKeyChecking=no ${DEV_SERVER} bash /home/ec2-user/server-script.sh ${IMAGE_NAME}"
                 sh "ssh ${DEV_SERVER} sudo docker login -u ${username}  -p ${password}"
-                    //   sh "ssh ${DEV_SERVER} sudo docker login -u ${username}  -p ${password} newasxisdevops.jfrog.io"
+            //   sh "ssh ${DEV_SERVER} sudo docker login -u ${username}  -p ${password} newasxisdevops.jfrog.io"
                 sh "ssh ${DEV_SERVER} sudo docker push ${IMAGE_NAME}"
                 
             }
@@ -117,9 +117,9 @@ pipeline {
                 sshagent(['slave2']) {
                withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'password', usernameVariable: 'username')]) {
                     // withCredentials([usernamePassword(credentialsId: 'jfrog-cred', passwordVariable: 'password', usernameVariable: 'username')]) {
-                echo 'Deploy the code'
-                echo "Deploying the app version ${params.APPVERSION}"
-                echo "Deploying on ${params.Platform}"
+                // echo 'Deploy the code'
+                // echo "Deploying the app version ${params.APPVERSION}"
+                // echo "Deploying on ${params.Platform}"
                 sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} sudo yum install docker -y"
                sh "ssh ${DEPLOY_SERVER} sudo systemctl start docker"
                sh "ssh ${DEPLOY_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
