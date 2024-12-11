@@ -95,11 +95,11 @@ pipeline {
           stage('Deploy with ansible') {//slave2 -- /var/lib/jenkins/workspace
         //agent {label 'linux_slave'}
        
-        when{
-            expression{
-                BRANCH_NAME == 'ansible-cicd'
-            }
-        }
+        // when{
+        //     expression{
+        //         BRANCH_NAME == 'ansible-cicd'
+        //     }
+        // }
         agent any
            input{
             message "Select the version to deploy"
