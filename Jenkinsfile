@@ -112,7 +112,7 @@ pipeline {
                   script{
                   sshagent(['slave2']) {//ssh into ACM
                     echo "waiting for ec2 instance to intialise"
-                    sleep(time:90,unit: "SECONDS")
+                    //sleep(time:90,unit: "SECONDS")
                     echo "${EC2_PUBLIC_IP}"
                     //withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                     echo "Package the code ${params.APPVERSION}"
