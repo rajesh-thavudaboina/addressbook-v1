@@ -3,13 +3,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <servers>
     <server>
-      <username>xxx</username>
-      <password>xxx</password>
+      <username>preethi7194109@gmail.com</username>
+      <password>cmVmdGtuOjAxOjE3NzA5NTE2ODY6QnFOTmJNSWN1bkhQQm5ya3BMdkY0ZEJjSGkz</password>
       <id>central</id>
     </server>
     <server>
-      <username>xxx</username>
-      <password>xxx</password>
+      <username>preethi7194109@gmail.com</username>
+      <password>cmVmdGtuOjAxOjE3NzA5NTE2ODY6QnFOTmJNSWN1bkhQQm5ya3BMdkY0ZEJjSGkz</password>
       <id>snapshots</id>
     </server>
   </servers>
@@ -21,14 +21,14 @@
             <enabled>false</enabled>
           </snapshots>
           <id>central</id>
-          <name>adbook-libs-release</name>
-          <url>https://trialaeybn6.jfrog.io/artifactory/adbook-libs-release</url>
+          <name>demo-libs-release</name>
+          <url>https://preethidevops1.jfrog.io/artifactory/demo-libs-release</url>
         </repository>
         <repository>
           <snapshots />
           <id>snapshots</id>
-          <name>adbook-libs-snapshot</name>
-          <url>https://trialaeybn6.jfrog.io/artifactory/adbook-libs-snapshot</url>
+          <name>demo-libs-snapshot</name>
+          <url>https://preethidevops1.jfrog.io/artifactory/demo-libs-snapshot</url>
         </repository>
       </repositories>
       <pluginRepositories>
@@ -37,14 +37,14 @@
             <enabled>false</enabled>
           </snapshots>
           <id>central</id>
-          <name>adbook-libs-release</name>
-          <url>https://trialaeybn6.jfrog.io/artifactory/adbook-libs-release</url>
+          <name>demo-libs-release</name>
+          <url>https://preethidevops1.jfrog.io/artifactory/demo-libs-release</url>
         </pluginRepository>
         <pluginRepository>
           <snapshots />
           <id>snapshots</id>
-          <name>adbook-libs-snapshot</name>
-          <url>https://trialaeybn6.jfrog.io/artifactory/adbook-libs-snapshot</url>
+          <name>demo-libs-snapshot</name>
+          <url>https://preethidevops1.jfrog.io/artifactory/demo-libs-snapshot</url>
         </pluginRepository>
       </pluginRepositories>
       <id>artifactory</id>
