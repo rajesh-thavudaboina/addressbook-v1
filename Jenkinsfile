@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
 
     tools{
         maven 'mymaven'
@@ -11,6 +11,7 @@ pipeline {
     }
     stages {
         stage('Compile') {
+            agent any
             steps {
                 script{
                 echo "Compiling the code in ${params.Env}"
@@ -19,6 +20,7 @@ pipeline {
             }
         }
         stage('CodeReview') {
+            agent any
             steps {               
                 script{
                  echo 'Reviewing the code with pmd'
@@ -27,6 +29,7 @@ pipeline {
             }
         }
         stage('UnitTest') {
+            agent any
             when{
                 expression{
                     params.executeTests == true
@@ -40,6 +43,7 @@ pipeline {
             }
         }
         stage('CoverageAnalysis') {
+            agent {label 'linux_slave'}
             steps {  
                 script{
                  echo 'Static Code Coverage with jacoco'
@@ -48,6 +52,7 @@ pipeline {
             }
         }
         stage('Package') {
+            agent any
             steps {
                script{
                  echo "Packaging the code ${params.APPVERSION}"
@@ -56,6 +61,7 @@ pipeline {
             }
         }
         stage('Publish') {
+            agent any
             input{
                  message "Select the platform to deploy"
                 ok "platform selected"
