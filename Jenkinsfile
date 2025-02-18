@@ -41,6 +41,11 @@ pipeline {
                 sh "mvn test"
             }
             }
+            post{
+                always{
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
         }
         stage('CoverageAnalysis') {
             agent {label 'linux_slave'}
