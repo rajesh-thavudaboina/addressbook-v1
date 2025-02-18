@@ -60,8 +60,11 @@ pipeline {
             agent any
             steps {
                script{
+                sshagent(['slave2']) {
                  echo "Packaging the code ${params.APPVERSION}"
-                sh "mvn package"
+                sh "scp -o StrictHostKeyChecking=no server-script.sh ec2-user@172.31.10.36:/home/ec2-user"
+                sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.10.36 'bash ~/server-script.sh'"
+                }
             }
             }
         }
