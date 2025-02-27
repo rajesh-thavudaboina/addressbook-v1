@@ -12,6 +12,7 @@ pipeline {
     environment{
         BUILD_SERVER='ec2-user@172.31.0.99'
         IMAGE_NAME='devopstrainer/java-mvn-privaterepos:$BUILD_NUMBER'
+        DEPLOY_SERVER='ec2-user@172.31.5.162'
     }
     stages {
         stage('Compile') {
@@ -61,15 +62,13 @@ pipeline {
             }
             }
         }
-        stage('Dockerize and push the image') {
+        stage('Dockerize and push the image to dockerhub') {
             agent any
             steps {
                script{
                 sshagent(['slave2']) {
-            
                 withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-
-                 echo "Packaging the code ${params.APPVERSION}"
+                echo "Packaging the code ${params.APPVERSION}"
                 sh "scp -o StrictHostKeyChecking=no server-script.sh ${BUILD_SERVER}:/home/ec2-user"
                 sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} bash /home/ec2-user/server-script.sh ${IMAGE_NAME}"
                 sh "ssh ${BUILD_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
@@ -79,19 +78,37 @@ pipeline {
             }
             }
         }
-        stage('Publish') {
+        stage('Publish the war to jfrog') {
             agent any
-            input{
+            steps {  
+            script{
+                echo 'publishing the artifact to jfrog'
+                sh "mvn -U deploy -s settings.xml"
+            }
+            }
+        }
+        stage('Deploy the image to deploy server') {
+            agent any
+             input{
                  message "Select the platform to deploy"
                 ok "platform selected"
                 parameters{
                     choice(name:'NEWAPP',choices:['EKS','Ec2','on-premise'])
                 }
             }
-            steps {  
-            script{
-                echo 'publishing the artifact to jfrog'
-                sh "mvn -U deploy -s settings.xml"
+            steps {
+               script{
+                sshagent(['slave2']) {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                echo "Packaging the code ${params.APPVERSION}"
+                // sh "scp -o StrictHostKeyChecking=no server-script.sh ${DEPLOY_SERVER}:/home/ec2-user"
+                // sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} bash /home/ec2-user/server-script.sh ${IMAGE_NAME}"
+                sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} sudo yum install dokcer -y"
+                sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} sudo systemctl start docker"
+                sh "ssh ${BUILD_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
+                sh "ssh ${BUILD_SERVER} sudo docker run -itd -p 9001:8080 ${IMAGE_NAME}"
+                }
+                }
             }
             }
         }
