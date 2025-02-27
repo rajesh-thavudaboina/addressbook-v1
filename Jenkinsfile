@@ -11,6 +11,7 @@ pipeline {
     }
     environment{
         BUILD_SERVER='ec2-user@172.31.10.36'
+        IMAGE_NAME='devopstrainer/java-mvn-repos:$BUILD_NUMBER'
     }
     stages {
         stage('Compile') {
@@ -59,14 +60,16 @@ pipeline {
             }
             }
         }
-        stage('Package') {
+        stage('Dockerize and push the image') {
             agent any
             steps {
                script{
                 sshagent(['slave2']) {
                  echo "Packaging the code ${params.APPVERSION}"
                 sh "scp -o StrictHostKeyChecking=no server-script.sh ${BUILD_SERVER}:/home/ec2-user"
-                sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} 'bash ~/server-script.sh'"
+                sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} bash ~/server-script.sh ${IMAGE_NAME}"
+                sh "ssh ${BUILD_SERVER} sudo docker login -u devopstrainer -p password"
+                sh "ssh ${BUILD_SERVER} sudo docker push ${IMAGE_NAME}"
                 }
             }
             }
