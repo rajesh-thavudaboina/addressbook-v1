@@ -11,7 +11,7 @@ pipeline {
     }
     environment{
         BUILD_SERVER='ec2-user@172.31.0.99'
-        IMAGE_NAME='devopstrainer/java-mvn-repos:$BUILD_NUMBER'
+        IMAGE_NAME='devopstrainer/java-mvn-privaterepos:$BUILD_NUMBER'
     }
     stages {
         stage('Compile') {
