@@ -17,6 +17,7 @@ else
 fi
 
 cd /home/ec2-user/addressbook-v1
+git checkout demo2
 
-
+#mvn package
 sudo docker build -t $1 .
