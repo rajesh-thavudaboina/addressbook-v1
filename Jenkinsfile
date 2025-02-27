@@ -10,7 +10,7 @@ pipeline {
         choice(name:'APPVERSION',choices:['1.1','1.2','1.3'])
     }
     environment{
-        BUILD_SERVER='ec2-user@172.31.10.36'
+        BUILD_SERVER='ec2-user@172.31.0.99'
         IMAGE_NAME='devopstrainer/java-mvn-repos:$BUILD_NUMBER'
     }
     stages {
@@ -65,11 +65,15 @@ pipeline {
             steps {
                script{
                 sshagent(['slave2']) {
+            
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+
                  echo "Packaging the code ${params.APPVERSION}"
                 sh "scp -o StrictHostKeyChecking=no server-script.sh ${BUILD_SERVER}:/home/ec2-user"
                 sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} bash ~/server-script.sh ${IMAGE_NAME}"
-                sh "ssh ${BUILD_SERVER} sudo docker login -u devopstrainer -p password"
+                sh "ssh ${BUILD_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
                 sh "ssh ${BUILD_SERVER} sudo docker push ${IMAGE_NAME}"
+                }
                 }
             }
             }
