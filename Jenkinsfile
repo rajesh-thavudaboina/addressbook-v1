@@ -103,7 +103,7 @@ pipeline {
                 echo "Packaging the code ${params.APPVERSION}"
                 // sh "scp -o StrictHostKeyChecking=no server-script.sh ${DEPLOY_SERVER}:/home/ec2-user"
                 // sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} bash /home/ec2-user/server-script.sh ${IMAGE_NAME}"
-                sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} sudo yum install dokcer -y"
+                sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} sudo yum install docker -y"
                 sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} sudo systemctl start docker"
                 sh "ssh ${BUILD_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
                 sh "ssh ${BUILD_SERVER} sudo docker run -itd -p 9001:8080 ${IMAGE_NAME}"
