@@ -71,7 +71,7 @@ pipeline {
 
                  echo "Packaging the code ${params.APPVERSION}"
                 sh "scp -o StrictHostKeyChecking=no server-script.sh ${BUILD_SERVER}:/home/ec2-user"
-                sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} bash ~/server-script.sh ${IMAGE_NAME}"
+                sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} bash /home/ec2-user/server-script.sh ${IMAGE_NAME}"
                 sh "ssh ${BUILD_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
                 sh "ssh ${BUILD_SERVER} sudo docker push ${IMAGE_NAME}"
                 }
