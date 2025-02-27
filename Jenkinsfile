@@ -78,15 +78,15 @@ pipeline {
             }
             }
         }
-        stage('Publish the war to jfrog') {
-            agent any
-            steps {  
-            script{
-                echo 'publishing the artifact to jfrog'
-                sh "mvn -U deploy -s settings.xml"
-            }
-            }
-        }
+        // stage('Publish the war to jfrog') {
+        //     agent any
+        //     steps {  
+        //     script{
+        //         echo 'publishing the artifact to jfrog'
+        //         sh "mvn -U deploy -s settings.xml"
+        //     }
+        //     }
+        // }
         stage('Deploy the image to deploy server') {
             agent any
              input{
