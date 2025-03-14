@@ -13,6 +13,8 @@ pipeline {
         BUILD_SERVER='ec2-user@172.31.0.99'
         IMAGE_NAME='devopstrainer/java-mvn-privaterepos:$BUILD_NUMBER'
         DEPLOY_SERVER='ec2-user@172.31.5.162'
+        ACCESS_KEY=credentials('aws_access_key_id')
+        SECRET_ACCESS_KEY=credentials('aws_secret_access_key')
     }
     stages {
         stage('Compile') {
@@ -89,13 +91,6 @@ pipeline {
         // }
         stage('Deploy the image to deploy server in Staging env') {
             agent any
-             input{
-                 message "Select the platform to deploy"
-                ok "platform selected"
-                parameters{
-                    choice(name:'NEWAPP',choices:['EKS','Ec2','on-premise'])
-                }
-            }
             steps {
                script{
                 sshagent(['slave2']) {
@@ -124,12 +119,16 @@ pipeline {
             steps {
                script{
                 sh "kubectl get nodes"
-                sh "kubectl apply -f k8s-manifests/java-mvn-app.yml"
+                sh 'aws configure set aws_access_key_id ${ACCESS_KEY}'
+                sh 'aws configure set aws_secret_access_key ${SECRET_ACCESS_KEY}'
+                 sh 'aws eks update-kubeconfig --region ap-south-1 --name demo'
+                sh "envsubst < k8s-manifests/java-mvn-app.yml | kubectl apply -f -"
+                sh "kubectl get all"
                 
                 }
                 }
             }
-            }
-        }
+            
+        
     }
 }
