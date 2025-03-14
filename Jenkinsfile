@@ -11,7 +11,7 @@ pipeline {
     }
     environment{
         BUILD_SERVER='ec2-user@172.31.10.135'
-        IMAGE_NAME='devopstrainer/java-mvn-privaterepos:$BUILD_NUMBER'
+        IMAGE_NAME='devopstrainer/java-mvn-privaterepos'
         DEPLOY_SERVER='ec2-user@172.31.10.158'
         ACCESS_KEY=credentials('aws_access_key_id')
         SECRET_ACCESS_KEY=credentials('aws_secret_access_key')
@@ -72,9 +72,9 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                 echo "Packaging the code ${params.APPVERSION}"
                 sh "scp -o StrictHostKeyChecking=no server-script.sh ${BUILD_SERVER}:/home/ec2-user"
-                sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} bash /home/ec2-user/server-script.sh ${IMAGE_NAME}"
+                sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} bash /home/ec2-user/server-script.sh ${IMAGE_NAME} ${BUILD_NUMBER}"
                 sh "ssh ${BUILD_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
-                sh "ssh ${BUILD_SERVER} sudo docker push ${IMAGE_NAME}"
+                sh "ssh ${BUILD_SERVER} sudo docker push ${IMAGE_NAME}:${BUILD_NUMBER}"
                 }
                 }
             }
@@ -101,7 +101,7 @@ pipeline {
                 sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} sudo yum install docker -y"
                 sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} sudo systemctl start docker"
                 sh "ssh ${DEPLOY_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
-                sh "ssh ${DEPLOY_SERVER} sudo docker run -itd -P ${IMAGE_NAME}"
+                sh "ssh ${DEPLOY_SERVER} sudo docker run -itd -P ${IMAGE_NAME}:${BUILD_NUMBER}"
                 }
                 }
             }
