@@ -101,7 +101,7 @@ pipeline {
                 sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} sudo yum install docker -y"
                 sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} sudo systemctl start docker"
                 sh "ssh ${DEPLOY_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
-                sh "ssh ${DEPLOY_SERVER} sudo docker run -itd -p 9001:8080 ${IMAGE_NAME}"
+                sh "ssh ${DEPLOY_SERVER} sudo docker run -itd -P ${IMAGE_NAME}"
                 }
                 }
             }
