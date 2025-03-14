@@ -10,9 +10,9 @@ pipeline {
         choice(name:'APPVERSION',choices:['1.1','1.2','1.3'])
     }
     environment{
-        BUILD_SERVER='ec2-user@172.31.0.99'
+        BUILD_SERVER='ec2-user@172.31.10.135'
         IMAGE_NAME='devopstrainer/java-mvn-privaterepos:$BUILD_NUMBER'
-        DEPLOY_SERVER='ec2-user@172.31.5.162'
+        DEPLOY_SERVER='ec2-user@172.31.10.158'
         ACCESS_KEY=credentials('aws_access_key_id')
         SECRET_ACCESS_KEY=credentials('aws_secret_access_key')
     }
