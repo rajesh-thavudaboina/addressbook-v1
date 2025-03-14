@@ -87,7 +87,7 @@ pipeline {
         //     }
         //     }
         // }
-        stage('Deploy the image to deploy server') {
+        stage('Deploy the image to deploy server in Staging env') {
             agent any
              input{
                  message "Select the platform to deploy"
@@ -107,6 +107,25 @@ pipeline {
                 sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} sudo systemctl start docker"
                 sh "ssh ${DEPLOY_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
                 sh "ssh ${DEPLOY_SERVER} sudo docker run -itd -p 9001:8080 ${IMAGE_NAME}"
+                }
+                }
+            }
+            }
+        }
+         stage('Deploy on k8s cluster') {
+            agent any
+             input{
+                 message "Select the platform to deploy"
+                ok "platform selected"
+                parameters{
+                    choice(name:'NEWAPP',choices:['EKS','Ec2','on-premise'])
+                }
+            }
+            steps {
+               script{
+                sh "kubectl get nodes"
+                sh "kubectl apply -f k8s-manifests/java-mvn-app.yml"
+                
                 }
                 }
             }
