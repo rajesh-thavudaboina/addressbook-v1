@@ -118,12 +118,20 @@ pipeline {
             steps {
                script{
                
-                sh 'aws configure set aws_access_key_id ${ACCESS_KEY}'
-                sh 'aws configure set aws_secret_access_key ${SECRET_ACCESS_KEY}'
-                sh 'aws eks update-kubeconfig --region ap-south-1 --name myeks'
-                sh "kubectl get nodes"
-                sh "envsubst < k8s-manifests/java-mvn-app.yml | kubectl apply -f -"
-                sh "kubectl get all"                
+                // sh 'aws configure set aws_access_key_id ${ACCESS_KEY}'
+                // sh 'aws configure set aws_secret_access_key ${SECRET_ACCESS_KEY}'
+                // sh 'aws eks update-kubeconfig --region ap-south-1 --name myeks'
+                // sh "kubectl get nodes"
+                // sh "envsubst < k8s-manifests/java-mvn-app.yml | kubectl apply -f -"
+                // sh "kubectl get all"                
+                withCredentials([usernamePassword(credentialsId: "${GIT_CREDENTIALS_ID}", passwordVariable: 'GIT_TOKEN', usernameVariable: 'GIT_USER')]) {
+                        sh 'envsubst < java-mvn-app-var.yml > k8s-manifests/java-mvn-app.yml'
+                        sh "git config user.email ${GIT_EMAIL}"
+                        sh "git config user.name ${GIT_USERNAME}"
+                        sh "git add k8s-manifests/java-mvn-app.yml"
+                        sh "git commit -m 'Triggered Build: ${env.BUILD_NUMBER}'"
+                        sh "git push https://${GIT_USER}:${GIT_TOKEN}@github.com/preethid/addressbook.git HEAD:argocd-demo"
+                    }
                 }
                 }
             }           

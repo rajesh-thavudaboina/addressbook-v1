@@ -11,13 +11,13 @@ if [ -d "addressbook-v1" ]
 then
   echo "repo is cloned and exists"
   cd /home/ec2-user/addressbook-v1
-  git pull origin demo2
+  git pull origin argocd-demo
 else
   git clone https://github.com/preethid/addressbook-v1.git
 fi
 
 cd /home/ec2-user/addressbook-v1
-git checkout demo2
+git checkout argocd-demo
 
 #mvn package
 sudo docker build -t $1:$2 .
