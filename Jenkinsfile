@@ -14,6 +14,9 @@ pipeline {
         DEPLOY_SERVER='ec2-user@172.31.10.182'
         ACCESS_KEY=credentials('aws_access_key_id')
         SECRET_ACCESS_KEY=credentials('aws_secret_access_key')
+         GIT_CREDENTIALS_ID = 'GIT_CREDENTIALS_ID' // The username-password type ID of the Jenkins credentials
+    GIT_USERNAME = 'preethid'
+    GIT_EMAIL = 'preethi@example.com'
     }
     stages {
         stage('Compile') {
