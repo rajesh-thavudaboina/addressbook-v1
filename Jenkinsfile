@@ -95,19 +95,9 @@ pipeline {
           stage('Deploy with ansible') {//slave2 -- /var/lib/jenkins/workspace
         //agent {label 'linux_slave'}
        
-        when{
-            expression{
-                BRANCH_NAME == 'ansible-cicd'
-            }
-        }
+        
         agent any
-           input{
-            message "Select the version to deploy"
-            ok "version selected"
-            parameters{
-                choice(name:'NEWAPP',choices:['1.2','2.1','3.1'])
-            }
-           }
+           
             steps {
                   script{
                   sshagent(['slave2']) {//ssh into ACM
