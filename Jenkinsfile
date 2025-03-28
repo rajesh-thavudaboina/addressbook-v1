@@ -9,7 +9,7 @@ pipeline {
     DEV_SERVER_IP='ec2-user@172.31.12.11'
     //DEPLOY_SERVER_IP='ec2-user@172.31.11.81'
     IMAGE_NAME='devopstrainer/java-mvn-privaterepos:$BUILD_NUMBER'
-    ACM_IP='ec2-user@172.31.9.150'
+    ACM_IP='ec2-user@172.31.14.167'
     AWS_ACCESS_KEY_ID=credentials('aws_access_key_id')
     AWS_SECRET_ACCESS_KEY=credentials('aws_secret_access_key')
     DOCKER_REG_PASSWORD=credentials("DOCKER_REG_PASSWORD")
