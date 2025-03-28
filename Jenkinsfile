@@ -95,7 +95,7 @@ pipeline {
             agent any
             steps {
                script{
-                sshagent(['slave2']) {
+                sshagent(['slave2']) {//deploy server as jenkins slave   //ACM is jenkins slave--ansible-playbook--deployservers
                 withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                 echo "Packaging the code ${params.APPVERSION}"
                 // sh "scp -o StrictHostKeyChecking=no server-script.sh ${DEPLOY_SERVER}:/home/ec2-user"
