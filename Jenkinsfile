@@ -9,14 +9,14 @@ pipeline {
         choice(name:'APPVERSION',choices:['1.1','1.2','1.3'])
     }
     environment{
-        BUILD_SERVER='ec2-user@172.31.9.33'
+        BUILD_SERVER='ec2-user@172.31.12.11'
         IMAGE_NAME='devopstrainer/java-mvn-privaterepos'
-        DEPLOY_SERVER='ec2-user@172.31.10.182'
+       // DEPLOY_SERVER='ec2-user@172.31.10.182'
         ACCESS_KEY=credentials('aws_access_key_id')
         SECRET_ACCESS_KEY=credentials('aws_secret_access_key')
-         GIT_CREDENTIALS_ID = 'GIT_CREDENTIALS_ID' // The username-password type ID of the Jenkins credentials
-    GIT_USERNAME = 'preethid'
-    GIT_EMAIL = 'preethi@example.com'
+    //      GIT_CREDENTIALS_ID = 'GIT_CREDENTIALS_ID' // The username-password type ID of the Jenkins credentials
+    // GIT_USERNAME = 'preethid'
+    // GIT_EMAIL = 'preethi@example.com'
     }
     stages {
         stage('Compile') {
@@ -91,52 +91,40 @@ pipeline {
         //     }
         //     }
         // }
+        stage('Provision the infra with Terraform'){
+            agent any
+            steps{
+                script{
+                    dir('terraform'){
+                        sh "terraform init"
+                        sh "terraform apply --auto-approve"
+                        EC2_PUBLIC_IP= sh (
+                            script: "terraform output ec2-ip",
+                            returnStdout: true
+                        ).trim()
+                    }
+                }
+            }
+        }
         stage('Deploy the image to deploy server in Staging env') {
             agent any
             steps {
                script{
                 sshagent(['slave2']) {//deploy server as jenkins slave   //ACM is jenkins slave--ansible-playbook--deployservers
+
                 withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                 echo "Packaging the code ${params.APPVERSION}"
                 // sh "scp -o StrictHostKeyChecking=no server-script.sh ${DEPLOY_SERVER}:/home/ec2-user"
                 // sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} bash /home/ec2-user/server-script.sh ${IMAGE_NAME}"
-                sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} sudo yum install docker -y"
-                sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} sudo systemctl start docker"
-                sh "ssh ${DEPLOY_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
-                sh "ssh ${DEPLOY_SERVER} sudo docker run -itd -P ${IMAGE_NAME}:${BUILD_NUMBER}"
+                sh "ssh -o StrictHostKeyChecking=no ec2-user@${EC2_PUBLIC_IP} sudo yum install docker -y"
+                sh "ssh -o StrictHostKeyChecking=no ec2-user@{EC2_PUBLIC_IP} sudo systemctl start docker"
+                sh "ssh ec2-user@${EC2_PUBLIC_IP} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
+                sh "ssh ec2-user@${EC2_PUBLIC_IP} sudo docker run -itd -P ${IMAGE_NAME}:${BUILD_NUMBER}"
                 }
                 }
             }
             }
         }
-         stage('Deploy on k8s cluster') {
-            agent any
-             input{
-                 message "Select the platform to deploy"
-                ok "platform selected"
-                parameters{
-                    choice(name:'NEWAPP',choices:['EKS','Ec2','on-premise'])
-                }
-            }
-            steps {
-               script{
-               
-                // sh 'aws configure set aws_access_key_id ${ACCESS_KEY}'
-                // sh 'aws configure set aws_secret_access_key ${SECRET_ACCESS_KEY}'
-                // sh 'aws eks update-kubeconfig --region ap-south-1 --name myeks'
-                // sh "kubectl get nodes"
-                // sh "envsubst < k8s-manifests/java-mvn-app.yml | kubectl apply -f -"
-                // sh "kubectl get all"                
-                withCredentials([usernamePassword(credentialsId: "${GIT_CREDENTIALS_ID}", passwordVariable: 'GIT_TOKEN', usernameVariable: 'GIT_USER')]) {
-                        sh 'envsubst < java-mvn-app-var.yml > k8s-manifests/java-mvn-app.yml'
-                        sh "git config user.email ${GIT_EMAIL}"
-                        sh "git config user.name ${GIT_USERNAME}"
-                        sh "git add k8s-manifests/java-mvn-app.yml"
-                        sh "git commit -m 'Triggered Build: ${env.BUILD_NUMBER}'"
-                        sh "git push https://${GIT_USER}:${GIT_TOKEN}@github.com/preethid/addressbook-v1.git HEAD:argocd-demo"
-                    }
-                }
-                }
-            }           
+        
         }
 }
