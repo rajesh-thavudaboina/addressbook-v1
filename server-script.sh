@@ -20,4 +20,4 @@ cd /home/ec2-user/addressbook-v1
 git checkout cicd-terraform
 
 #mvn package
-sudo docker build -t $1:$2 .
+sudo docker build -t $1 .
