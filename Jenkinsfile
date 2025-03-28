@@ -117,7 +117,7 @@ pipeline {
                 // sh "scp -o StrictHostKeyChecking=no server-script.sh ${DEPLOY_SERVER}:/home/ec2-user"
                 // sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} bash /home/ec2-user/server-script.sh ${IMAGE_NAME}"
                 sh "ssh -o StrictHostKeyChecking=no ec2-user@${EC2_PUBLIC_IP} sudo yum install docker -y"
-                sh "ssh -o StrictHostKeyChecking=no ec2-user@{EC2_PUBLIC_IP} sudo systemctl start docker"
+                sh "ssh -o ec2-user@${EC2_PUBLIC_IP} sudo systemctl start docker"
                 sh "ssh ec2-user@${EC2_PUBLIC_IP} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
                 sh "ssh ec2-user@${EC2_PUBLIC_IP} sudo docker run -itd -P ${IMAGE_NAME}:${BUILD_NUMBER}"
                 }
