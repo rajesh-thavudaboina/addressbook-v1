@@ -7,7 +7,6 @@ pipeline {
         choice(name:'APPVERSION',choices:['1.1','1.2','1.3'])
     }
 
-
     stages {
         stage('Compile') {
             steps {
