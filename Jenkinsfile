@@ -67,9 +67,10 @@ pipeline {
         }
         stage('Package') {
             agent any
-            sshagent(['slave2']) {
+           
             steps {
                 script{
+                     sshagent(['slave2']) {
                     echo 'Package Hello World'
                 echo "Packaging version ${params.APPVERSION}"
                 sh "scp -o StrictHostKeyChecking=no server-script.sh ${BUILD_SERVER}:/home/ec2-user"
