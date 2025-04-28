@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools{
+        maven 'mymaven'
+    }
+
     parameters{
         string(name:'Env',defaultValue:'Test',description:'version to deploy')
         booleanParam(name:'executeTests',defaultValue: true,description:'decide to run tc')
@@ -34,7 +38,7 @@ pipeline {
         stage('CodeReview') {
             steps {
                 script{
-                    echo 'Compile Hello World'
+                    echo 'CodeReview Hello World'
                     echo "Deploying in ${params.Env} environment"
                     sh "mvn pmd:pmd"
                 }
@@ -43,7 +47,7 @@ pipeline {
         stage('CodeCoverage') {
             steps {
                 script{
-                    echo 'Compile Hello World'
+                    echo 'Coverage Analysis Hello World'
                     echo "Deploying in ${params.Env} environment"
                     sh "mvn verify"
                 }
@@ -62,7 +66,7 @@ pipeline {
         stage('PublishtoJfrog') {
             steps {
                 script{
-                    echo 'Compile Hello World'
+                    echo 'Publish to Jfrog'
                     echo "Deploying in ${params.Env} environment"
                     sh "mvn -u deploy -s settings.xml"
                 }
