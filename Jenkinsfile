@@ -68,7 +68,7 @@ pipeline {
                 script{
                     echo 'Publish to Jfrog'
                     echo "Deploying in ${params.Env} environment"
-                    sh "mvn -u deploy -s settings.xml"
+                    sh "mvn -U deploy -s settings.xml"
                 }
             }
         }
