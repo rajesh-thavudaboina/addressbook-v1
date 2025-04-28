@@ -69,6 +69,13 @@ pipeline {
             }
         }
         stage('PublishtoJfrog') {
+            input{
+                message "Archive the artifact"
+                ok "Platform selected"
+                parameters{
+                    choice(name:'Platform',choices:['Nexus','Jfrog'])
+                }
+            }
             steps {
                 script{
                     echo 'Publish to Jfrog'
