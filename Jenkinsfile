@@ -10,7 +10,9 @@ pipeline {
         booleanParam(name:'executeTests',defaultValue: true,description:'decide to run tc')
         choice(name:'APPVERSION',choices:['1.1','1.2','1.3'])
     }
-
+     environment{
+        BUILD_SERVER='ec2-user@172.31.8.151'
+     }
     stages {
         stage('Compile') {
             agent any
@@ -43,7 +45,8 @@ pipeline {
             }
         }
         stage('CodeReview') {
-            agent {label 'linux_slave'}
+            //agent {label 'linux_slave'}
+            agent any
             steps {
                 script{
                     echo 'CodeReview Hello World'
@@ -64,14 +67,17 @@ pipeline {
         }
         stage('Package') {
             agent any
+            sshagent(['slave2']) {
             steps {
                 script{
                     echo 'Package Hello World'
                 echo "Packaging version ${params.APPVERSION}"
-                sh 'mvn package'
+                sh "scp -o StrictHostKeyChecking=no server-script.sh ${BUILD_SERVER}:/home/ec2-user"
+                sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} 'bash ~/server-script.sh'"
                 }
                 
             }
+        }
         }
         stage('PublishtoJfrog') {
             agent any
