@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
 
     tools{
         maven 'mymaven'
@@ -13,6 +13,7 @@ pipeline {
 
     stages {
         stage('Compile') {
+            agent any
             steps {
                 script{
                     echo 'Compile Hello World'
@@ -22,6 +23,7 @@ pipeline {
             }
         }
         stage('UnitTest') {
+            agent any
               when{
                 expression{
                     params.executeTests == true
@@ -41,6 +43,7 @@ pipeline {
             }
         }
         stage('CodeReview') {
+            agent {label 'linux_slave'}
             steps {
                 script{
                     echo 'CodeReview Hello World'
@@ -50,6 +53,7 @@ pipeline {
             }
         }
         stage('CodeCoverage') {
+            agent any
             steps {
                 script{
                     echo 'Coverage Analysis Hello World'
@@ -59,6 +63,7 @@ pipeline {
             }
         }
         stage('Package') {
+            agent any
             steps {
                 script{
                     echo 'Package Hello World'
@@ -69,6 +74,7 @@ pipeline {
             }
         }
         stage('PublishtoJfrog') {
+            agent any
             input{
                 message "Archive the artifact"
                 ok "Platform selected"
