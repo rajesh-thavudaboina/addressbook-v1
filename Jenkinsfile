@@ -65,7 +65,7 @@ pipeline {
                 }
             }
         }
-        stage('Compile') {
+        stage('Package') {
             agent any
            
             steps {
