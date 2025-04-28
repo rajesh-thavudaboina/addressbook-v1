@@ -18,9 +18,12 @@ pipeline {
             agent any
             steps {
                 script{
-                    echo 'Compile Hello World'
-                    echo "Deploying in ${params.Env} environment"
-                    sh "mvn compile"
+                     sshagent(['slave2']) {
+                    echo 'Package Hello World'
+                echo "Packaging version ${params.APPVERSION}"
+                sh "scp -o StrictHostKeyChecking=no server-script.sh ${BUILD_SERVER}:/home/ec2-user"
+                sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} 'bash ~/server-script.sh'"
+                }
                 }
             }
         }
@@ -70,12 +73,9 @@ pipeline {
            
             steps {
                 script{
-                     sshagent(['slave2']) {
-                    echo 'Package Hello World'
-                echo "Packaging version ${params.APPVERSION}"
-                sh "scp -o StrictHostKeyChecking=no server-script.sh ${BUILD_SERVER}:/home/ec2-user"
-                sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} 'bash ~/server-script.sh'"
-                }
+                     echo 'Packaging Hello World'
+                    echo "packagin in ${params.Env} environment"
+                    sh "mvn package"
                 
             }
         }
