@@ -27,5 +27,6 @@ else
 fi
 
 cd /home/ec2-user/addressbook-v1
+git checkout docker-demo
 # mvn compile
 sudo docker build -t $1 .
