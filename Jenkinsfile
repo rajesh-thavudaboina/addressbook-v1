@@ -12,6 +12,7 @@ pipeline {
     }
      environment{
         BUILD_SERVER='ec2-user@172.31.7.227'
+        DEPLOY_SERVER='ec2-user@172.31.4.216'
         IMAGE_NAME='devopstrainer/addbook:$BUILD_NUMBER'
      }
     stages {
@@ -112,6 +113,25 @@ pipeline {
                         sh "ssh ${BUILD_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
                         sh "ssh ${BUILD_SERVER} sudo docker push ${IMAGE_NAME}"
                         //sh "ssh ${BUILD_SERVER} sudo docker run -itd -P ${IMAGE_NAME}"
+                        }
+                    }
+                }
+            }
+        }
+        stage('Test/deploy the docker image'){//on build server
+            agent any
+            steps{
+                script{
+                    sshagent(['slave2']) {
+                        withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                        echo "Containerising the code and pushing the image"
+                        //  sh "scp -o StrictHostKeyChecking=no server-script.sh ${BUILD_SERVER}:/home/ec2-user"
+                        //  sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} bash /home/ec2-user/server-script.sh ${IMAGE_NAME}"
+                        // sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} 'docker build -t ${IMAGE_NAME} .'"
+                        sh "ssh ${DEPLOY_SERVER} sudo yum install -y docker"
+                        sh "ssh ${DEPLOY_SERVER} sudo service docker start"
+                        sh "ssh ${DEPLOY_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
+                        sh "ssh ${DEPLOY_SERVER} sudo docker run -itd -P ${IMAGE_NAME}"
                         }
                     }
                 }
