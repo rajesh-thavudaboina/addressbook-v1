@@ -13,7 +13,9 @@ pipeline {
      environment{
         BUILD_SERVER='ec2-user@172.31.7.227'
         DEPLOY_SERVER='ec2-user@172.31.4.216'
-        IMAGE_NAME='devopstrainer/addbook:$BUILD_NUMBER'
+        IMAGE_NAME='devopstrainer/addbook'
+        ACCESS_KEY=credentials('ACCESS_KEY')
+        SECRET_ACCESS_KEY=credentials('SECRET_ACCESS_KEY')
      }
     stages {
         stage('Compile') {
@@ -108,17 +110,17 @@ pipeline {
                         withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                         echo "Containerising the code and pushing the image"
                          sh "scp -o StrictHostKeyChecking=no server-script.sh ${BUILD_SERVER}:/home/ec2-user"
-                         sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} bash /home/ec2-user/server-script.sh ${IMAGE_NAME}"
+                         sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} 'bash /home/ec2-user/server-script.sh ${IMAGE_NAME} ${BUILD_NUMBER}'"
                         // sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER} 'docker build -t ${IMAGE_NAME} .'"
                         sh "ssh ${BUILD_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
-                        sh "ssh ${BUILD_SERVER} sudo docker push ${IMAGE_NAME}"
+                        sh "ssh ${BUILD_SERVER} sudo docker push ${IMAGE_NAME}:${BUILD_NUMBER}"
                         //sh "ssh ${BUILD_SERVER} sudo docker run -itd -P ${IMAGE_NAME}"
                         }
                     }
                 }
             }
         }
-        stage('Test/deploy the docker image'){//on build server
+        stage('Test/deploy the docker image'){//on deploy server
             agent any
             steps{
                 script{
@@ -131,12 +133,28 @@ pipeline {
                         sh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} sudo yum install -y docker"
                         sh "ssh ${DEPLOY_SERVER} sudo service docker start"
                         sh "ssh ${DEPLOY_SERVER} sudo docker login -u ${USERNAME} -p ${PASSWORD}"
-                        sh "ssh ${DEPLOY_SERVER} sudo docker run -itd -P ${IMAGE_NAME}"
+                        sh "ssh ${DEPLOY_SERVER} sudo docker run -itd -P ${IMAGE_NAME}:${BUILD_NUMBER}"
                         }
                     }
                 }
             }
         }
+        stage('Deploy the manifest/docker image on EKS'){
+            agent any
+            steps{
+                script{
+                      echo "Run the k8s manifest file"
+                sh 'aws --version'
+                sh 'aws configure set aws_access_key_id ${ACCESS_KEY}'
+                sh 'aws configure set aws_secret_access_key ${SECRET_ACCESS_KEY}'
+                sh 'aws eks update-kubeconfig --region ap-south-1 --name myeks1'
+                sh 'kubectl get nodes'
+                sh 'envsubst < k8s-manifests/java-mvn-app.yml |  kubectl apply -f -'
+                sh 'kubectl get all'
+                    }
+                }
+            }
     }
+    
 }
 
