@@ -11,8 +11,8 @@ pipeline {
         choice(name:'APPVERSION',choices:['1.1','1.2','1.3'])
     }
      environment{
-        BUILD_SERVER='ec2-user@172.31.3.138'
-        DEPLOY_SERVER='ec2-user@172.31.10.164'
+        BUILD_SERVER='ec2-user@172.31.4.215'
+        DEPLOY_SERVER='ec2-user@172.31.0.125'
         IMAGE_NAME='devopstrainer/java-mvn-privaterepos'
         ACCESS_KEY=credentials('ACCESS_KEY')
         SECRET_ACCESS_KEY=credentials('SECRET_ACCESS_KEY')
@@ -147,7 +147,7 @@ pipeline {
                 sh 'aws --version'
                 sh 'aws configure set aws_access_key_id ${ACCESS_KEY}'
                 sh 'aws configure set aws_secret_access_key ${SECRET_ACCESS_KEY}'
-                sh 'aws eks update-kubeconfig --region ap-south-1 --name eks-test'
+                sh 'aws eks update-kubeconfig --region ap-south-1 --name test-eks1'
                 sh 'kubectl get nodes'
                 sh 'envsubst < k8s-manifests/java-mvn-app.yml |  kubectl apply -f -'
                 sh 'kubectl get all'
