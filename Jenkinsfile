@@ -142,7 +142,7 @@ pipeline {
                 }
             }
         }
-        stage('Deploy the manifest/docker image on EKS via ARGO CD'){
+        stage('Updating the Manifest file on github'){
             agent any
             steps{
                 script{
