@@ -127,7 +127,7 @@ pipeline {
                         // Assuming the Terraform files are in a directory named 'terraform'
                         sh 'terraform init'
                         sh 'terraform apply -auto-approve'
-                        EC2_PUBLIC_IP = sh(script: 'terraform output ec2_ip', returnStdout: true).trim()
+                        EC2_PUBLIC_IP = sh(script: 'terraform output ec2-ip', returnStdout: true).trim()
                     }
                 }
             }
