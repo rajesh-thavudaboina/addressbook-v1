@@ -15,8 +15,8 @@ pipeline {
        // DEPLOY_SERVER='ec2-user@172.31.4.216' (creating wth terraform)
         IMAGE_NAME='devopstrainer/addbook:$BUILD_NUMBER'
         ACM_IP='ec2-user@172.31.3.157'
-         AWS_ACCESS_KEY_ID=credentials('aws_access_key_id')
-        AWS_SECRET_ACCESS_KEY=credentials('aws_secret_access_key')
+         AWS_ACCESS_KEY_ID=credentials('ACCESS_KEY')
+        AWS_SECRET_ACCESS_KEY=credentials('SECRET_ACCESS_KEY')
       DOCKER_REG_PASSWORD=credentials("DOCKER_REG_PASSWORD")
      }
     stages {
