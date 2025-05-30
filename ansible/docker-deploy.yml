@@ -18,11 +18,11 @@
     pip: name=docker state=present
   - name: Install urllib3 with compatible version
     pip: name=urllib3<2.0 state=present
-  - name: Run the sample dockerimage
-    docker_container: 
-        name: addbook
-        image: devopstrainer/deploy:v1
-        published_ports: "9090:8080"
+  # - name: Run the sample dockerimage
+  #   docker_container: 
+  #       name: addbook
+  #       image: devopstrainer/deploy:v1
+  #       published_ports: "9090:8080"
   - name: login to private registry
     docker_login: username=devopstrainer password={{DOCKER_REG_PASSWORD}}
   - name: Run the addbook image
