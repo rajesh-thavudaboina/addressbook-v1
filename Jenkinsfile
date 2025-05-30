@@ -122,7 +122,7 @@ pipeline {
                 }
             }
         }
-        stage('Provision deploy server with terraform'){
+        stage('Provision deploy server with terraform'){//creating ansible target/deploy server on which container will be deployed
             agent any
             steps {
                 script {
@@ -136,7 +136,7 @@ pipeline {
                 }
             }
         }
-        stage('Test/deploy the docker image'){//on deploy servers
+        stage('Running the playing on ACM'){//which will deploy container on ansible target which is created bby TF in previous stage
             agent any
             steps{
                 script{
