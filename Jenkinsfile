@@ -1,5 +1,5 @@
 pipeline{
-  agent any
+  agent none
   tools {
     maven "maven3.9"
   }
@@ -10,6 +10,7 @@ pipeline{
   }
   stages{
     stage ("compile") {
+      agent any
       steps{
           script{
             echo "compiling java code in ${params.Env}"
@@ -19,6 +20,7 @@ pipeline{
       }
     }
     stage ("code Review") {
+      agent any
       steps{
         script{
           echo "Reviewing the code with pmd"
@@ -27,6 +29,7 @@ pipeline{
       }
     }
     stage ("unit test") {
+      agent any
       when{
         expression{
         params.executeTests == true
@@ -40,6 +43,7 @@ pipeline{
       }
     }
     stage ("Coverage Analysis"){
+      agent any
       steps{
           script{
           echo "static code analysis with jacoco"
@@ -48,6 +52,7 @@ pipeline{
       }
     }
     stage ("Package") {
+      agent {label 'slave'}
       steps{
         script{
           echo "Creating artifact ${params.AppVersion}"
